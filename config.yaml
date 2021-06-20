@@ -12,7 +12,7 @@ buildDrafts: false
 buildFuture: false
 buildExpired: false
 enableEmoji: true
-# googleAnalytics:
+googleAnalytics: "G-75ZFXG8W71"
 
 minify:
     disableXML: true
@@ -148,19 +148,19 @@ params:
         - name: RsS
           url: "index.xml"
 
-    #editPost:
-        #URL: "https://github.com/adityatelange/hugo-PaperMod/tree/exampleSite/content"
-        #Text: "Suggest Changes" # edit text
-        #appendFilePath: true # to append file path to Edit link
+    editPost:
+       URL: "https://github.com/adityatelange/hugo-PaperMod/tree/exampleSite/content"
+       Text: "Suggest Changes" # edit text
+       appendFilePath: true # to append file path to Edit link
 
     # label:
-    #     text: "Home"
-    #     icon: icon.png
-    #     iconHeight: 35
+    #    text: "Home"
+    #    icon: icon.png
+    #    iconHeight: 35
 
-    # analytics:
-    #     google:
-    #         SiteVerificationTag: "XYZabc"
+    analytics:
+       google:
+           SiteVerificationTag: "G-75ZFXG8W71"
 
     # assets:
     #     favicon: "<link / abs url>"
