@@ -1,0 +1,88 @@
+---
+title: 'CommonLit: Exploratory Data Analysis'
+author: Scott Richter
+date: '2021-06-19'
+slug: []
+categories:
+  - CommonLit
+  - Projects
+tags:
+  - Exploratory Data Analysis (EDA)
+---
+
+
+
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>Howdy hi</p>
+</div>
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<div id="hyperparameters" class="section level3">
+<h3>Hyperparameters</h3>
+<pre class="r"><code># Set working directory and filenames
+wd &lt;- &quot;C:/Users/srich/iCloudDrive/@ MSDS Round 3/2. Capstone Project/Project/CommonLitReadability/projectData&quot;
+fileTrain &lt;- &quot;train.csv&quot;
+fileTest &lt;- &quot;test.csv&quot;</code></pre>
+</div>
+<div id="libraries" class="section level3">
+<h3>Libraries</h3>
+<pre class="r"><code>library(tidyverse)      # General purpose data manipulation, analysis, and visualization</code></pre>
+</div>
+<div id="data-loading-and-preprocessing" class="section level3">
+<h3>Data Loading and Preprocessing</h3>
+<div id="load-data" class="section level4">
+<h4>Load Data</h4>
+<pre class="r"><code># Set working directory for data access
+setwd(wd)
+
+# Load in the training and test sets of the CommonLit data
+train &lt;- read_csv(fileTrain)
+test &lt;- read_csv(fileTest)</code></pre>
+</div>
+<div id="first-look" class="section level4">
+<h4>First Look</h4>
+<p>Test gives us 7 observations as a model for how submissions should be formatted. It contains the fields [id, url_legal, license, excerpt].</p>
+<pre class="r"><code>head(test)</code></pre>
+<pre><code>## # A tibble: 6 x 4
+##   id      url_legal               license   excerpt                             
+##   &lt;chr&gt;   &lt;chr&gt;                   &lt;chr&gt;     &lt;chr&gt;                               
+## 1 c0f722~ &lt;NA&gt;                    &lt;NA&gt;      &quot;My hope lay in Jack&#39;s promise that~
+## 2 f0953f~ &lt;NA&gt;                    &lt;NA&gt;      &quot;Dotty continued to go to Mrs. Gray~
+## 3 0df072~ &lt;NA&gt;                    &lt;NA&gt;      &quot;It was a bright and cheerful scene~
+## 4 04caf4~ https://en.wikipedia.o~ CC BY-SA~ &quot;Cell division is the process by wh~
+## 5 0e63f8~ https://en.wikipedia.o~ CC BY-SA~ &quot;Debugging is the process of findin~
+## 6 12537f~ &lt;NA&gt;                    &lt;NA&gt;      &quot;To explain transitivity, let us lo~</code></pre>
+<p>Train is the main dataset I will use for exploration and feature engineering. It contains the above fields and [target, standard_error].</p>
+<pre class="r"><code>head(train) </code></pre>
+<pre><code>## # A tibble: 6 x 6
+##   id      url_legal license excerpt                        target standard_error
+##   &lt;chr&gt;   &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;                           &lt;dbl&gt;          &lt;dbl&gt;
+## 1 c12129~ &lt;NA&gt;      &lt;NA&gt;    &quot;When the young people return~ -0.340          0.464
+## 2 85aa80~ &lt;NA&gt;      &lt;NA&gt;    &quot;All through dinner time, Mrs~ -0.315          0.481
+## 3 b69ac6~ &lt;NA&gt;      &lt;NA&gt;    &quot;As Roger had predicted, the ~ -0.580          0.477
+## 4 dd1000~ &lt;NA&gt;      &lt;NA&gt;    &quot;And outside before the palac~ -1.05           0.450
+## 5 37c1b3~ &lt;NA&gt;      &lt;NA&gt;    &quot;Once upon a time there were ~  0.247          0.511
+## 6 f9bf35~ &lt;NA&gt;      &lt;NA&gt;    &quot;Hal and Chester found ample ~ -0.862          0.481</code></pre>
+<p>The first four columns in train are strings, so let’s take a look at the two numeric variables “target” and “standard_error”. These represent the average difficulty score that raters assigned to an excerpt, and the standard deviation of that score across raters. The lower the target rating, the easier it was for readers to read on average.</p>
+<pre class="r"><code>summary(train[c(&quot;target&quot;, &quot;standard_error&quot;)])</code></pre>
+<pre><code>##      target        standard_error  
+##  Min.   :-3.6763   Min.   :0.0000  
+##  1st Qu.:-1.6903   1st Qu.:0.4685  
+##  Median :-0.9122   Median :0.4847  
+##  Mean   :-0.9593   Mean   :0.4914  
+##  3rd Qu.:-0.2025   3rd Qu.:0.5063  
+##  Max.   : 1.7114   Max.   :0.6497</code></pre>
+<p>Looks like the average difficulty of the excerpts is around -0.9593, with half of all difficulty scores falling between -1.69 and -0.20. If we can expect the standard deviation of these scores to be about 0.4914, giving us a 3<span class="math inline">\(\sigma\)</span> confidence interval of [-2.4335, 0.5149] for the difficulty level of 99.7% of the excerpts.</p>
+</div>
+</div>
+</div>
+<div id="analysis" class="section level2">
+<h2>Analysis</h2>
+<div id="summary-statistics" class="section level3">
+<h3>Summary Statistics</h3>
+</div>
+<div id="visualizations" class="section level3">
+<h3>Visualizations</h3>
+</div>
+</div>

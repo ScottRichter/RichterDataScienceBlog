@@ -1,0 +1,67 @@
+---
+title: 'CommonLit: Exploratory Data Analysis'
+author: Scott Richter
+date: '2021-06-19'
+slug: []
+categories:
+  - CommonLit
+  - Projects
+tags:
+  - Exploratory Data Analysis (EDA)
+---
+
+## Overview
+
+Howdy hi
+
+## Setup
+### Hyperparameters
+```{r Hyperparams}
+# Set working directory and filenames
+wd <- "C:/Users/srich/iCloudDrive/@ MSDS Round 3/2. Capstone Project/Project/CommonLitReadability/projectData"
+fileTrain <- "train.csv"
+fileTest <- "test.csv"
+```
+
+### Libraries
+```{r Libs, message=FALSE}
+library(tidyverse)      # General purpose data manipulation, analysis, and visualization
+```
+
+
+### Data Loading and Preprocessing
+#### Load Data
+```{r Load, message=FALSE, warning=FALSE}
+# Set working directory for data access
+setwd(wd)
+
+# Load in the training and test sets of the CommonLit data
+train <- read_csv(fileTrain)
+test <- read_csv(fileTest)
+```
+
+#### First Look
+Test gives us 7 observations as a model for how submissions should be formatted. It contains the fields [id, url_legal, license, excerpt].
+
+```{r}
+head(test)
+```
+
+
+Train is the main dataset I will use for exploration and feature engineering. It contains the above fields and [target, standard_error].
+
+```{r}
+head(train) 
+```
+
+The first four columns in train are strings, so let's take a look at the two numeric variables "target" and "standard_error". These represent the average difficulty score that raters assigned to an excerpt, and the standard deviation of that score across raters. The lower the target rating, the easier it was for readers to read on average.
+
+```{r}
+summary(train[c("target", "standard_error")])
+```
+
+Looks like the average difficulty of the excerpts is around -0.9593, with half of all difficulty scores falling between -1.69 and -0.20. If we can expect the standard deviation of these scores to be about 0.4914, giving us a 3$\sigma$ confidence interval of `r paste0("[", as.character(-0.9593 - (3*0.4914)), ", ", as.character(-0.9593 + (3*0.4914)), "]")` for the difficulty level of 99.7% of the excerpts.
+
+## Analysis
+### Summary Statistics
+### Visualizations
