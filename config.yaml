@@ -1,0 +1,4 @@
+theme: "hugo-PaperMod"
+baseURL: http://richterdatascience.netlify.app/
+languageCode: en-us
+title: Richter Data Science
