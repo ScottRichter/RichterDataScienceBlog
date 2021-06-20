@@ -128,9 +128,9 @@ params:
               url: tags
 
     homeInfoParams:
-        Title: "For the love of insights"
+        Title: "For the Love of All Things Data"
         Content: >
-          I'm Scott Richter, a data scientist living in Portland, Oregon. After earning an MBA in quant methods, marketing, and operations from Willamette University's Atkinson School,
+          Hi! I'm Scott Richter, a data scientist living in Portland, Oregon. After earning an MBA in quant methods, marketing, and operations from Willamette University's Atkinson School,
           I realized the potential I could unlock by pursuing a Master's degree in data science.   
           <br />
           <br />
