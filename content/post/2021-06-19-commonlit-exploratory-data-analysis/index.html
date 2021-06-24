@@ -14,7 +14,7 @@ tags:
 
 <div id="overview" class="section level2">
 <h2>Overview</h2>
-<p>Howdy hi</p>
+<p>A first look at EDA for CommonLit text excerpts.</p>
 </div>
 <div id="setup" class="section level2">
 <h2>Setup</h2>
@@ -27,7 +27,10 @@ fileTest &lt;- &quot;test.csv&quot;</code></pre>
 </div>
 <div id="libraries" class="section level3">
 <h3>Libraries</h3>
-<pre class="r"><code>library(tidyverse)      # General purpose data manipulation, analysis, and visualization</code></pre>
+<pre class="r"><code>library(tidyverse)      # General purpose data manipulation, analysis, and visualization
+library(tidytext)       # Text manipulation and operations
+library(tm)             # Text cleaning
+library(kableExtra)     # Presentation of tables in markdown</code></pre>
 </div>
 <div id="data-loading-and-preprocessing" class="section level3">
 <h3>Data Loading and Preprocessing</h3>
@@ -75,14 +78,688 @@ test &lt;- read_csv(fileTest)</code></pre>
 ##  Max.   : 1.7114   Max.   :0.6497</code></pre>
 <p>Looks like the average difficulty of the excerpts is around -0.9593, with half of all difficulty scores falling between -1.69 and -0.20. If we can expect the standard deviation of these scores to be about 0.4914, giving us a 3<span class="math inline">\(\sigma\)</span> confidence interval of [-2.4335, 0.5149] for the difficulty level of 99.7% of the excerpts.</p>
 </div>
+<div id="create-a-word-level-dataset" class="section level4">
+<h4>Create a word-level dataset</h4>
+<p>The next step in working with text data is to break apart each paragraph into its component words for a more granular look. I do this using tidytext.</p>
+<pre class="r"><code># Create a dataset of all words, no punctuation
+words &lt;- train %&gt;% 
+  select(id, excerpt, target) %&gt;%
+  unnest_tokens(word, excerpt)
+
+# Convert all words to lowercase, remove punctuation, numbers, and whitespace. Drop empty words.
+words_lower_nopunc &lt;- words %&gt;%
+  mutate(word = tolower(word),
+         word = removePunctuation(word),
+         word = removeNumbers(word),
+         word = gsub(&quot; &quot;, x = word, replacement = &quot;&quot;, fixed = TRUE)) %&gt;%
+  filter(word != &quot;&quot;)
+
+# View some words
+head(words_lower_nopunc)</code></pre>
+<pre><code>## # A tibble: 6 x 3
+##   id        target word    
+##   &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;   
+## 1 c12129c31 -0.340 when    
+## 2 c12129c31 -0.340 the     
+## 3 c12129c31 -0.340 young   
+## 4 c12129c31 -0.340 people  
+## 5 c12129c31 -0.340 returned
+## 6 c12129c31 -0.340 to</code></pre>
+<pre class="r"><code># Remove stopwords
+words_clean &lt;- words_lower_nopunc %&gt;%
+  anti_join(stop_words)</code></pre>
+<pre><code>## Joining, by = &quot;word&quot;</code></pre>
+<pre class="r"><code># View some clean words
+head(words_clean)</code></pre>
+<pre><code>## # A tibble: 6 x 3
+##   id        target word      
+##   &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;     
+## 1 c12129c31 -0.340 people    
+## 2 c12129c31 -0.340 returned  
+## 3 c12129c31 -0.340 ballroom  
+## 4 c12129c31 -0.340 decidedly 
+## 5 c12129c31 -0.340 changed   
+## 6 c12129c31 -0.340 appearance</code></pre>
+</div>
 </div>
 </div>
 <div id="analysis" class="section level2">
 <h2>Analysis</h2>
-<div id="summary-statistics" class="section level3">
-<h3>Summary Statistics</h3>
-</div>
-<div id="visualizations" class="section level3">
-<h3>Visualizations</h3>
+<div id="word-counts-and-average-difficulty" class="section level3">
+<h3>Word counts and average difficulty</h3>
+<pre class="r"><code># Make a dataset with word counts, mean and median difficulty scores
+word_stats &lt;- words_clean %&gt;%
+  group_by(word) %&gt;%
+  summarize(count = n(),
+            mean_difficulty = mean(target),
+            median_difficulty = median(target))</code></pre>
+<pre class="r"><code># 20 most common words
+common &lt;- word_stats %&gt;%
+  arrange(desc(count)) %&gt;%
+  head(20)
+
+ggplot(common,aes(x=reorder(word, count), y=count)) +
+  geom_col(fill=&quot;darkorchid1&quot;, color = &quot;grey30&quot;) +
+  coord_flip() +
+  theme_light() +
+  labs(x = &quot;Word&quot;, y = &quot;Count in Excerpts&quot;,
+       title = &quot;20 Most Common Words in Test Data&quot;)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code># 20 most difficult words appearing at least ten times
+difficult &lt;- word_stats %&gt;%
+  arrange(mean_difficulty) %&gt;%
+  filter(count &gt;=10) %&gt;%
+  head(20)
+
+kable(difficult)</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+word
+</th>
+<th style="text-align:right;">
+count
+</th>
+<th style="text-align:right;">
+mean_difficulty
+</th>
+<th style="text-align:right;">
+median_difficulty
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+velocity
+</td>
+<td style="text-align:right;">
+22
+</td>
+<td style="text-align:right;">
+-2.694762
+</td>
+<td style="text-align:right;">
+-2.864957
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+vertical
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+-2.626286
+</td>
+<td style="text-align:right;">
+-2.742016
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+molecular
+</td>
+<td style="text-align:right;">
+22
+</td>
+<td style="text-align:right;">
+-2.617361
+</td>
+<td style="text-align:right;">
+-2.515944
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mm
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+-2.610755
+</td>
+<td style="text-align:right;">
+-3.293821
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+boiler
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+-2.580915
+</td>
+<td style="text-align:right;">
+-2.519765
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+electrostatic
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+-2.580552
+</td>
+<td style="text-align:right;">
+-2.378186
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+electron
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+-2.563842
+</td>
+<td style="text-align:right;">
+-2.286336
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+effected
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+-2.542675
+</td>
+<td style="text-align:right;">
+-2.516179
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+zinc
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+-2.527868
+</td>
+<td style="text-align:right;">
+-2.857673
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+rumania
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+-2.523840
+</td>
+<td style="text-align:right;">
+-2.679316
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cylinder
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+-2.491510
+</td>
+<td style="text-align:right;">
+-3.071234
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ingenious
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+-2.417863
+</td>
+<td style="text-align:right;">
+-2.675046
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cubic
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+-2.415567
+</td>
+<td style="text-align:right;">
+-2.711545
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+rubles
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+-2.405903
+</td>
+<td style="text-align:right;">
+-2.538207
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tax
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+-2.389311
+</td>
+<td style="text-align:right;">
+-2.538207
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+discrete
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+-2.388480
+</td>
+<td style="text-align:right;">
+-2.301071
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+thickness
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+-2.384665
+</td>
+<td style="text-align:right;">
+-2.366802
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+acceleration
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+-2.381128
+</td>
+<td style="text-align:right;">
+-2.362779
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+alpha
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+-2.378034
+</td>
+<td style="text-align:right;">
+-2.530228
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+babylonian
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+-2.367507
+</td>
+<td style="text-align:right;">
+-2.232323
+</td>
+</tr>
+</tbody>
+</table>
+<p>Many difficult words appear to have a scientific connotation. Words like velocity, electron, acceleration and zinc are associated with physics and chemistry.</p>
+<pre class="r"><code># 20 least difficult words appearing at least ten times
+easy &lt;- word_stats %&gt;%
+  arrange(desc(mean_difficulty)) %&gt;%
+  filter(count &gt;=10) %&gt;%
+  head(20)
+
+kable(easy)</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+word
+</th>
+<th style="text-align:right;">
+count
+</th>
+<th style="text-align:right;">
+mean_difficulty
+</th>
+<th style="text-align:right;">
+median_difficulty
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+chameleon
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+1.0904399
+</td>
+<td style="text-align:right;">
+0.9465676
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+bhujar
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+0.9271690
+</td>
+<td style="text-align:right;">
+0.9271690
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+rini
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+0.9271690
+</td>
+<td style="text-align:right;">
+0.9271690
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+parrot
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.8282761
+</td>
+<td style="text-align:right;">
+1.2756840
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+mosquito
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+0.7430027
+</td>
+<td style="text-align:right;">
+0.8663298
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+leopard
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+0.6651467
+</td>
+<td style="text-align:right;">
+0.6593575
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+antelope
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.6593575
+</td>
+<td style="text-align:right;">
+0.6593575
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+dinosaurs
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+0.6084755
+</td>
+<td style="text-align:right;">
+0.9911140
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+tortoise
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+0.5778550
+</td>
+<td style="text-align:right;">
+0.3130877
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+crocodiles
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+0.5489434
+</td>
+<td style="text-align:right;">
+0.3853461
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+wasps
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+0.5460820
+</td>
+<td style="text-align:right;">
+0.9225986
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+locusts
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+0.4927192
+</td>
+<td style="text-align:right;">
+0.7291054
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+necklace
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+0.4714012
+</td>
+<td style="text-align:right;">
+1.0621511
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+laura
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+0.4676447
+</td>
+<td style="text-align:right;">
+0.7373835
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ling
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+0.4476857
+</td>
+<td style="text-align:right;">
+0.5968201
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+bunny
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+0.4337804
+</td>
+<td style="text-align:right;">
+0.4304587
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+helen
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+0.4142795
+</td>
+<td style="text-align:right;">
+0.6465494
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+trap
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+0.4039480
+</td>
+<td style="text-align:right;">
+0.9322587
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+rabbits
+</td>
+<td style="text-align:right;">
+22
+</td>
+<td style="text-align:right;">
+0.3965288
+</td>
+<td style="text-align:right;">
+0.6258783
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pig
+</td>
+<td style="text-align:right;">
+45
+</td>
+<td style="text-align:right;">
+0.3863600
+</td>
+<td style="text-align:right;">
+0.4599322
+</td>
+</tr>
+</tbody>
+</table>
+<p>An interesting finding in line with one of my earlier assumptions. Animals are frequently represented in some of the easiest excerpts. It is unclear whether these animals are characters in a story or the excerpts are biological in nature.</p>
 </div>
 </div>

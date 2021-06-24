@@ -12,7 +12,7 @@ tags:
 
 ## Overview
 
-Howdy hi
+A first look at EDA for CommonLit text excerpts.
 
 ## Setup
 ### Hyperparameters
@@ -26,6 +26,9 @@ fileTest <- "test.csv"
 ### Libraries
 ```{r Libs, message=FALSE}
 library(tidyverse)      # General purpose data manipulation, analysis, and visualization
+library(tidytext)       # Text manipulation and operations
+library(tm)             # Text cleaning
+library(kableExtra)     # Presentation of tables in markdown
 ```
 
 
@@ -62,6 +65,81 @@ summary(train[c("target", "standard_error")])
 
 Looks like the average difficulty of the excerpts is around -0.9593, with half of all difficulty scores falling between -1.69 and -0.20. If we can expect the standard deviation of these scores to be about 0.4914, giving us a 3$\sigma$ confidence interval of `r paste0("[", as.character(-0.9593 - (3*0.4914)), ", ", as.character(-0.9593 + (3*0.4914)), "]")` for the difficulty level of 99.7% of the excerpts.
 
+#### Create a word-level dataset
+
+The next step in working with text data is to break apart each paragraph into its component words for a more granular look. I do this using tidytext.
+
+```{r}
+# Create a dataset of all words, no punctuation
+words <- train %>% 
+  select(id, excerpt, target) %>%
+  unnest_tokens(word, excerpt)
+
+# Convert all words to lowercase, remove punctuation, numbers, and whitespace. Drop empty words.
+words_lower_nopunc <- words %>%
+  mutate(word = tolower(word),
+         word = removePunctuation(word),
+         word = removeNumbers(word),
+         word = gsub(" ", x = word, replacement = "", fixed = TRUE)) %>%
+  filter(word != "")
+
+# View some words
+head(words_lower_nopunc)
+
+# Remove stopwords
+words_clean <- words_lower_nopunc %>%
+  anti_join(stop_words)
+
+# View some clean words
+head(words_clean)
+```
+
+
 ## Analysis
-### Summary Statistics
-### Visualizations
+### Word counts and average difficulty
+```{r}
+# Make a dataset with word counts, mean and median difficulty scores
+word_stats <- words_clean %>%
+  group_by(word) %>%
+  summarize(count = n(),
+            mean_difficulty = mean(target),
+            median_difficulty = median(target))
+```
+
+```{r}
+# 20 most common words
+common <- word_stats %>%
+  arrange(desc(count)) %>%
+  head(20)
+
+ggplot(common,aes(x=reorder(word, count), y=count)) +
+  geom_col(fill="darkorchid1", color = "grey30") +
+  coord_flip() +
+  theme_light() +
+  labs(x = "Word", y = "Count in Excerpts",
+       title = "20 Most Common Words in Test Data")
+```
+
+```{r}
+# 20 most difficult words appearing at least ten times
+difficult <- word_stats %>%
+  arrange(mean_difficulty) %>%
+  filter(count >=10) %>%
+  head(20)
+
+kable(difficult)
+```
+
+Many difficult words appear to have a scientific connotation. Words like velocity, electron, acceleration and zinc are associated with physics and chemistry. 
+
+```{r}
+# 20 least difficult words appearing at least ten times
+easy <- word_stats %>%
+  arrange(desc(mean_difficulty)) %>%
+  filter(count >=10) %>%
+  head(20)
+
+kable(easy)
+```
+
+An interesting finding in line with one of my earlier assumptions. Animals are frequently represented in some of the easiest excerpts. It is unclear whether these animals are characters in a story or the excerpts are biological in nature.
