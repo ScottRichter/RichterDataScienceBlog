@@ -42,6 +42,8 @@ Some potential features derived from each passage could include:
 * Emotional content
 * Frequency of stopwords
 
+<!--- I think this is a good start; however, I will push you to get even more creative when thinking through potential features. For instance, you could look at characteristics of frequency distributions, evolution of word complexity in passage or difference in frequency distribution compared to a "standard" distribution for grade level. -->
+
 
 While I don't expect to find the optimal combination of model parameters and features, I will strive to reduce RMSE and produce something useful for CommonLit. I plan to benchmark my model against the existing methods that CommonLit finds insufficient. For example, the Fleisch-Kincaid Grade Level, which is based on simple text decoding and syntactic complexity. This includes measuring the average characters or syllables per word and the number of words per sentence. 
 
