@@ -29,7 +29,7 @@ The problem CommonLit currently faces is that **existing methods of text readabi
 The competition sponsor poses the question "Can machine learning help align texts with students' abilities to inspire learning?"
 For practical purposes, I want to know which machine learning model and feature set can best predict the target readability level of a passage. I have a training set of 2834 excerpts from literature and their associated readability scores (An average from the judgments of multiple readers) that can help me answer these questions.
 
-Because I will be predicting a numeric quantity (my outcome variable is the [target readability score](https://www.kaggle.com/c/commonlitreadabilityprize/discussion/240423)), I'll likely be investigating regression models. I chose this project because I intend to improve my proficiency in text mining and natural language processing. Because I only have text data to predict outcomes with, I'd expect every feature I engineer to be derivative of the text excerpts. 
+Because I will be predicting a numeric quantity, I'll likely be investigating regression models. My outcome variable is the [target readability score](https://www.kaggle.com/c/commonlitreadabilityprize/discussion/240423). I chose this project because I intend to improve my proficiency in text mining and natural language processing. Because I only have text data to predict outcomes with, I'd expect every feature I engineer to be derivative of the text excerpts. 
 
 Some potential features derived from each passage could include:  
 

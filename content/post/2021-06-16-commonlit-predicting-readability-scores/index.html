@@ -28,7 +28,7 @@ tags:
 <h2>Proposal</h2>
 <p>The competition sponsor poses the question “Can machine learning help align texts with students’ abilities to inspire learning?”
 For practical purposes, I want to know which machine learning model and feature set can best predict the target readability level of a passage. I have a training set of 2834 excerpts from literature and their associated readability scores (An average from the judgments of multiple readers) that can help me answer these questions.</p>
-<p>Because I will be predicting a numeric quantity (my outcome variable is the target readability score), I’ll likely be investigating regression models. I chose this project because I intend to improve my proficiency in text mining and natural language processing. Because I only have text data to predict outcomes with, I’d expect every feature I engineer to be derivative of the text excerpts.</p>
+<p>Because I will be predicting a numeric quantity, I’ll likely be investigating regression models. My outcome variable is the <a href="https://www.kaggle.com/c/commonlitreadabilityprize/discussion/240423">target readability score</a>. I chose this project because I intend to improve my proficiency in text mining and natural language processing. Because I only have text data to predict outcomes with, I’d expect every feature I engineer to be derivative of the text excerpts.</p>
 <p>Some potential features derived from each passage could include:</p>
 <ul>
 <li>Sentence length</li>
@@ -40,6 +40,7 @@ For practical purposes, I want to know which machine learning model and feature 
 <li>Emotional content</li>
 <li>Frequency of stopwords</li>
 </ul>
+<!--- I think this is a good start; however, I will push you to get even more creative when thinking through potential features. For instance, you could look at characteristics of frequency distributions, evolution of word complexity in passage or difference in frequency distribution compared to a "standard" distribution for grade level. -->
 <p>While I don’t expect to find the optimal combination of model parameters and features, I will strive to reduce RMSE and produce something useful for CommonLit. I plan to benchmark my model against the existing methods that CommonLit finds insufficient. For example, the Fleisch-Kincaid Grade Level, which is based on simple text decoding and syntactic complexity. This includes measuring the average characters or syllables per word and the number of words per sentence.</p>
 <p>To calculate my final RMSE, I will have to submit my final model and dataset to the project sponsor, who will then run the model on the test dataset and report back my RMSE. If possible, I will submit a model that just uses the Fleisch-Kincaid method to receive its RMSE as a benchmark to my final model’s RMSE. If that isn’t permissible, I will compare RMSE using a holdout sample I pull from the training dataset.</p>
 </div>
