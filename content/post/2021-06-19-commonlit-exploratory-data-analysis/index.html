@@ -138,7 +138,7 @@ common &lt;- word_stats %&gt;%
   arrange(desc(count)) %&gt;%
   head(20)
 
-ggplot(common,aes(x=reorder(word, count), y=count)) +
+ggplot(common, aes(x=reorder(word, count), y=count)) +
   geom_col(fill=&quot;darkorchid1&quot;, color = &quot;grey30&quot;) +
   coord_flip() +
   theme_light() +
@@ -761,5 +761,8 @@ pig
 </tbody>
 </table>
 <p>An interesting finding in line with one of my earlier assumptions. Animals are frequently represented in some of the easiest excerpts. It is unclear whether these animals are characters in a story or the excerpts are biological in nature.</p>
+</div>
+<div id="section" class="section level3">
+<h3></h3>
 </div>
 </div>
