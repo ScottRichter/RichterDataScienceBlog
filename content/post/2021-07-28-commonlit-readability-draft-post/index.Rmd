@@ -126,7 +126,10 @@ Before I break the excerpts down into single words, I will create some excerpt-l
 # Dialogue features
 df_train <- train %>%
   mutate(n_dialogue = str_count(excerpt, " \""),
-         n_said = str_count(tolower(excerpt), "said"))
+         n_said = str_count(tolower(excerpt), "said"),
+         n_words = lengths(gregexpr("\\W+", excerpt)) + 1,
+         n_stopwords = (unlist(str_split(excerpt, " "))[unlist(str_split(excerpt, " ")) %in% stop_words])
+)
 
 #### Dialogue analysis ####
 # Jitterplot of Said vs. Dialogue
@@ -225,4 +228,4 @@ An interesting finding in line with one of my earlier assumptions. Animals are f
 
 
 
-## Modeling Readability
+# Modeling Readability

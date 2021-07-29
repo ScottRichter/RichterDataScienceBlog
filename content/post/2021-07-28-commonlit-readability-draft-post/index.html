@@ -133,7 +133,10 @@ test &lt;- read_csv(fileTest)</code></pre>
 # Dialogue features
 df_train &lt;- train %&gt;%
   mutate(n_dialogue = str_count(excerpt, &quot; \&quot;&quot;),
-         n_said = str_count(tolower(excerpt), &quot;said&quot;))
+         n_said = str_count(tolower(excerpt), &quot;said&quot;),
+         n_words = lengths(gregexpr(&quot;\\W+&quot;, excerpt)) + 1,
+         avg_word_length = mean(sapply(excerpt, function(x)length(unlist(gregexpr(&quot; &quot;, x)))+1))
+)
 
 #### Dialogue analysis ####
 # Jitterplot of Said vs. Dialogue
@@ -834,7 +837,7 @@ pig
 <p>An interesting finding in line with one of my earlier assumptions. Animals are frequently represented in some of the easiest excerpts. It is unclear whether these animals are characters in a story or the excerpts are biological in nature.</p>
 </div>
 </div>
-<div id="modeling-readability" class="section level2">
-<h2>Modeling Readability</h2>
 </div>
+<div id="modeling-readability" class="section level1">
+<h1>Modeling Readability</h1>
 </div>
