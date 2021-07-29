@@ -21,6 +21,9 @@ A first look at EDA for CommonLit text excerpts.
 wd <- "C:/Users/srich/iCloudDrive/@ MSDS Round 3/2. Capstone Project/Project/CommonLitReadability/projectData"
 fileTrain <- "train.csv"
 fileTest <- "test.csv"
+
+# Random seed
+set.seed(520)
 ```
 
 ### Libraries
@@ -29,6 +32,7 @@ library(tidyverse)      # General purpose data manipulation, analysis, and visua
 library(tidytext)       # Text manipulation and operations
 library(tm)             # Text cleaning
 library(kableExtra)     # Presentation of tables in markdown
+library(tidymodels)     # User-friendly model development for predicting target readability
 ```
 
 
@@ -65,11 +69,37 @@ summary(train[c("target", "standard_error")])
 
 Looks like the average difficulty of the excerpts is around -0.9593, with half of all difficulty scores falling between -1.69 and -0.20. If we can expect the standard deviation of these scores to be about 0.4914, giving us a 3$\sigma$ confidence interval of `r paste0("[", as.character(-0.9593 - (3*0.4914)), ", ", as.character(-0.9593 + (3*0.4914)), "]")` for the difficulty level of 99.7% of the excerpts.
 
+#### Excerpt-level variables
+
+Before I break the excerpts down into single words, I will create some excerpt-level predictors.
+
+```{r}
+#### Excerpt-level features ####
+# Dialogue features
+df_train <- train %>%
+  mutate(n_dialogue = str_count(excerpt, " \""),
+         n_said = str_count(tolower(excerpt), "said"))
+
+#### Dialogue analysis ####
+# Jitterplot of Said vs. Dialogue
+df_train %>%
+  ggplot(aes(x = n_said, y = n_dialogue)) +
+    geom_jitter(alpha = 0.3, color = "steelblue") +
+    theme_minimal() +
+    labs(x = "Count of \"Said\"", y = "Count of Dialogue",
+         title = "Dialogue in Test Excerpts")
+
+# Correlation of Said vs. Dialogue
+cor(df_train$n_said, df_train$n_dialogue)
+```
+
+
 #### Create a word-level dataset
 
 The next step in working with text data is to break apart each paragraph into its component words for a more granular look. I do this using tidytext.
 
 ```{r}
+#### Word-level features ####
 # Create a dataset of all words, no punctuation
 words <- train %>% 
   select(id, excerpt, target) %>%
