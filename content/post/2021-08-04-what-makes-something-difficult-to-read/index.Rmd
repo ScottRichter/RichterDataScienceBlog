@@ -39,4 +39,5 @@ Because I will be predicting a numeric quantity, I’ll be relying on regression
 
 In this case, my response variable is the [readability score](https://www.kaggle.com/c/commonlitreadabilityprize/discussion/240423) of each excerpt. I only have text data to predict with, so I’d expect every explanatory variable I create to be derived from the excerpts. That is, I'll be using characteristics of each passage to make guesses about how difficult the graders found the passage to read. I'll then be able to see which text characteristics have the strongest impact on readability and use them for accurate predictions.
 
-## 
+## How Do You Measure Readability, Anyway?
+
