@@ -1,0 +1,42 @@
+---
+title: A New Way To Model Readability
+author: Scott Richter
+date: '2021-08-04'
+slug: []
+categories:
+  - Projects
+  - CommonLit
+tags: []
+---
+
+## What Makes Something Difficult to Read?
+
+One of the most complicated (and interesting) challenges in Data Science is getting computers to understand text written by humans. Anyone could tell you that a passage from *War and Peace* is probably harder for most people to comprehend than a page out of *If You Give a Mouse a Cookie*, but how can we quantify the difference between the two? 
+
+<center>
+
+![*One of these books is more challenging to read than the other*](images/BooksTransparent.png)
+
+</center>
+
+This question is especially relevant for CommonLit, an education nonprofit that focuses on improving youth literacy. CommonLit provides over 20 million students and teachers with free digital reading and writing lessons based on an impressive collection of books, poems, and articles in the public domain.
+
+To ensure that students are assigned reading material that is appropriate for their skill level, these works need to be given a readability score. The problem, CommonLit asserts, is that existing methods of classifying readability are either cost-prohibitive or so reductive that they're insufficient. 
+
+With an accurate, open-source method for evaluating the readability of a work, teachers would be able to ensure that their students are assigned suitably challenging work to improve their literacy skills. Students would also be able to receive feedback on the complexity and readability of their work, making it easier for them to improve their essential literacy skills.
+
+My solution? Use machine learning techniques and natural language processing on a database of graded text excerpts from CommonLit to create a new, free method of evaluating text readability. The question boils down to "Which features of a text excerpt best predict its readability score?" 
+
+If you've got a flight to catch, the short answer is: XXXXXXXXXXXX XXXXX XXXXXXXXX XXXXXXXX, in that order. If you've got some time before your flight, though, read on: the comprehensive answer is more interesting.
+
+## A Quick Overview: CommonLit Data and Regression Modeling
+
+This project is made possible through CommonLit's sponsorship on Kaggle. If you'd like to learn more, the data for this project can be found at [this Kaggle link.](https://www.kaggle.com/c/commonlitreadabilityprize/overview) 
+
+The competition sponsor poses the question “Can machine learning help align texts with students’ abilities to inspire learning?” For practical purposes, I want to know which machine learning model and feature set can best predict the target readability level of a passage. To help me answer these question, I have a training set of 2834 text excerpts and their associated readability scores (A number based on the average difficulty score given by multiple readers who rated the difficulty of reading each passage).
+
+Because I will be predicting a numeric quantity, I’ll be relying on regression models. Regression analysis is a way to sort out how explanatory variables affect a response variable. For example, say we were deciding how to price a new house about to go on the market. **Explanatory variables** could include the number of bathrooms, the square footage, and whether the house has central heating. These features all have an impact on the **response variable**, the expected price of the house. 
+
+In this case, my response variable is the [readability score](https://www.kaggle.com/c/commonlitreadabilityprize/discussion/240423) of each excerpt. I only have text data to predict with, so I’d expect every explanatory variable I create to be derived from the excerpts. That is, I'll be using characteristics of each passage to make guesses about how difficult the graders found the passage to read. I'll then be able to see which text characteristics have the strongest impact on readability and use them for accurate predictions.
+
+## 
