@@ -6,6 +6,7 @@ paginate: 5
 
 ####
 
+math: true
 enableInlineShortcodes: true
 enableRobotsTXT: true
 buildDrafts: false

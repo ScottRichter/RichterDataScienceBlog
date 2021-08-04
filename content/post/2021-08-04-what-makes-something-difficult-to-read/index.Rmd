@@ -7,6 +7,7 @@ categories:
   - Projects
   - CommonLit
 tags: []
+math: true
 ---
 
 ## What Makes Something Difficult to Read?
@@ -41,14 +42,16 @@ In this case, my response variable is the [readability score](https://www.kaggle
 
 ## How Do You Measure Readability, Anyway?
 
-There are a number of ways. Most reading scores are based on traditional readability methods or pay-per-use formulas. Perhaps the most ubiquitous score is the *Flesch-Kincaid Grade Level*, which is calculated using the total words, sentences, and syllables in a text. The result is a number that corresponds with the U.S. grade level of students for which the text is appropriate.
+There are a number of ways. Most reading scores are based on traditional readability methods or proprietary formulas that must be paid for. Perhaps the most ubiquitous score is the *Flesch-Kincaid Grade Level*, which is calculated using the total words, sentences, and syllables in a text. The result is a number that corresponds with the U.S. grade level of students for which the text is appropriate.
 
 <center>
 
 $$
 Grade = 0.39 * (\frac{total words}{total sentences}) + 11.8 * (\frac{total syllables}{total words}) - 15.59
 $$
-*Fleisch-Kincaid Grade Level Formula*)
+
+*Fleisch-Kincaid Grade Level Formula*
 
 </center>
 
+While this scoring system is helpful, it is not a comprehensive evaluation of reading complexity. Proprietary methods, like those used by market leader Lexile, offer a more thorough analysis of readability. The drawbacks with Lexile are that its methodology is opaque and it costs money to receive Lexile scores for any text excerpt longer than 250 characters. If you've got a tweet or other short passage you want analyzed, [you can use Lexile's free analyzer here.](https://hub.lexile.com/analyzer)
