@@ -88,12 +88,12 @@ I began this project with the expectation that a comprehensive model would be mo
 
 My expectations were met: the comprehensive model performed better than the Flesch-Kincaid model with a reduction in RMSE of 15.84%. R-squared, a number that indicates what percentage of variaton in the response variable is explained by the explanatory variables, also rose from explaining around a quarter of variation to explaining half of it.
 
-```{r echo=FALSE, message=FALSE, fig.align='center'}
+```{r echo=FALSE, message=FALSE}
 library(tidyverse)
 library(kableExtra)
 Metrics <- read.csv("C:/Users/srich/iCloudDrive/@ MSDS Round 3/2. Capstone Project/Project/Metrics.csv")
 Metrics <- Metrics %>% rename(Model = `ï..Model`, `R^2` = R.squared)
-kable(Metrics)
+kable(Metrics) %>% kable_styling(position = "center")
 ```
 
 Mapping variable importance gives us a look at which of the explanatory variables were most relevant for predicting readability. Surprisingly, some of the most powerful metrics like the Dickes-Steiwer (1977) number centered on calculations of average word and sentence length. Another component for predicting readability was the proportion of unique, challenging words in an excerpt, based on Spache (1952). 
@@ -110,4 +110,4 @@ There are some limitations to using my method. Most notably, the parsimony of my
 
 I'd love to extend this model and make it accessible online as a webapp in the future if I can translate the target readability metric into grade levels. While I intended for my algorithm to help students improve their literacy scores, my project could have implications beyond this purpose. This method might be generalized to apply to other nonprofit and for-profit scenarios beyond education technology. 
 
-Political campaigns could ensure that their messages are of a proper readability score for their target constituents, just like marketing copywriters could test whether their messaging is accessible for customers. Government offices and regulatory bodies could use my algorithm to make sure that official documentation is not too complex for its intended users.
+Political campaigns could ensure that their messages are of a proper readability score for their target constituents, just like marketing copywriters could test whether their messaging is accessible for customers. Government offices and regulatory bodies could use my algorithm to make sure that official documentation is not too complex for its intended audience.

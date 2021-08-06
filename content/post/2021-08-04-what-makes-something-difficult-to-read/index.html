@@ -10,6 +10,8 @@ tags: []
 math: true
 ---
 
+<script src="{{< blogdown/postref >}}index_files/kePrint/kePrint.js"></script>
+<link href="{{< blogdown/postref >}}index_files/lightable/lightable.css" rel="stylesheet" />
 
 
 <div id="what-makes-something-difficult-to-read" class="section level3">
@@ -72,7 +74,7 @@ math: true
 <h3>Results and Variable Importance</h3>
 <p>I began this project with the expectation that a comprehensive model would be more powerful at predicting readability than one that just relied on the Flesh-Kincaid Grade Level. I expected this because the addition of explanatory variables to a model increases the amount of information available for the model to make predictions with. It’s typically true that one can make better decisions if they have more complete information to work with.</p>
 <p>My expectations were met: the comprehensive model performed better than the Flesch-Kincaid model with a reduction in RMSE of 15.84%. R-squared, a number that indicates what percentage of variaton in the response variable is explained by the explanatory variables, also rose from explaining around a quarter of variation to explaining half of it.</p>
-<table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -123,5 +125,5 @@ Comprehensive
 <p>In this project I was able to demonstrate that there are ways to model readability more accurately than the Flesch-Kincaid Grade Level system, at no extra cost. Although readability metrics are sometimes criticized for relying on syntactic complexity and measures of word and sentence length, there is promise in using combinations of readability metrics to improve accuracy.</p>
 <p>There are some limitations to using my method. Most notably, the parsimony of my comprehensive model is sacrificed for an improvement in RMSE and R-squared. There’s something to be said for how easy it is to understand a model, and the high dimensionality of the comprehensive model makes it tough to interpret. With only one variable in the simple Flesch-Kincaid model, it’s easy to understand.</p>
 <p>I’d love to extend this model and make it accessible online as a webapp in the future if I can translate the target readability metric into grade levels. While I intended for my algorithm to help students improve their literacy scores, my project could have implications beyond this purpose. This method might be generalized to apply to other nonprofit and for-profit scenarios beyond education technology.</p>
-<p>Political campaigns could ensure that their messages are of a proper readability score for their target constituents, just like marketing copywriters could test whether their messaging is accessible for customers. Government offices and regulatory bodies could use my algorithm to make sure that official documentation is not too complex for its intended users.</p>
+<p>Political campaigns could ensure that their messages are of a proper readability score for their target constituents, just like marketing copywriters could test whether their messaging is accessible for customers. Government offices and regulatory bodies could use my algorithm to make sure that official documentation is not too complex for its intended audience.</p>
 </div>
