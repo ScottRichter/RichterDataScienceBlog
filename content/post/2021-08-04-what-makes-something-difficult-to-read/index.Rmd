@@ -10,7 +10,7 @@ tags: []
 math: true
 ---
 
-## What Makes Something Difficult to Read?
+### What Makes Something Difficult to Read?
 
 One of the most complicated (and interesting) challenges in Data Science is getting computers to understand text written by humans. Anyone could tell you that a passage from *War and Peace* is probably harder for most people to comprehend than a page out of *If You Give a Mouse a Cookie*, but how can we quantify the difference between the two? 
 
@@ -28,9 +28,9 @@ With an accurate, open-source method for evaluating the readability of a work, t
 
 My solution? Use machine learning techniques and natural language processing on a database of graded text excerpts from CommonLit to create a new, free method of evaluating text readability. The question boils down to "Which features of a text excerpt best predict its readability score?" 
 
-If you've got a flight to catch, the short answer is: XXXXXXXXXXXX XXXXX XXXXXXXXX XXXXXXXX, in that order. If you've got some time before your flight, though, read on: the comprehensive answer is more interesting.
+If you've got a flight to catch, the short answer is that simple measures of text readability can be remarkably powerful when combined. Based on my findings, using a collection of readability measures in tandem resulted in **an improvement of over 20% in accurately determining readability** when compared to the most popular measure (Flesch-Kincaid Grade Level) alone. If you've got some time before your flight, though, read on: the comprehensive answer is a little more interesting.
 
-## A Quick Overview: CommonLit Data and Regression Modeling
+### A Quick Overview: CommonLit Data and Regression Modeling
 
 This project is made possible through CommonLit's sponsorship on Kaggle. If you'd like to learn more, the data for this project can be found at [this Kaggle link.](https://www.kaggle.com/c/commonlitreadabilityprize/overview) 
 
@@ -40,18 +40,23 @@ Because I will be predicting a numeric quantity, I’ll be relying on regression
 
 In this case, my response variable is the [readability score](https://www.kaggle.com/c/commonlitreadabilityprize/discussion/240423) of each excerpt. I only have text data to predict with, so I’d expect every explanatory variable I create to be derived from the excerpts. That is, I'll be using characteristics of each passage to make guesses about how difficult the graders found the passage to read. I'll then be able to see which text characteristics have the strongest impact on readability and use them for accurate predictions.
 
-## How Do You Measure Readability, Anyway?
+### How Do You Measure Readability, Anyway?
 
 There are a number of ways. Most reading scores are based on traditional readability methods or proprietary formulas that must be paid for. Perhaps the most ubiquitous score is the *Flesch-Kincaid Grade Level*, which is calculated using the total words, sentences, and syllables in a text. The result is a number that corresponds with the U.S. grade level of students for which the text is appropriate.
 
 <center>
 
-$$
-Grade = 0.39 * (\frac{total words}{total sentences}) + 11.8 * (\frac{total syllables}{total words}) - 15.59
-$$
-
-*Fleisch-Kincaid Grade Level Formula*
+![*Flesch-Kincaid Grade Level Formula*](images/Flesch-Kincaid-Shadow.png)
 
 </center>
 
 While this scoring system is helpful, it is not a comprehensive evaluation of reading complexity. Proprietary methods, like those used by market leader Lexile, offer a more thorough analysis of readability. The drawbacks with Lexile are that its methodology is opaque and it costs money to receive Lexile scores for any text excerpt longer than 250 characters. If you've got a tweet or other short passage you want analyzed, [you can use Lexile's free analyzer here.](https://hub.lexile.com/analyzer)
+
+Because the Flesch-Kincaid Grade Level was once the standard for measuring readability, I'm going to use it as the baseline for how well my readability predictions perform. My goal is to use a combination of features (including Flesch-Kincaid) to improve prediction accuracy. To do this, I'll be generating explanatory variables from the text data based on popular measures of readability using the quanteda library in R. Think of quanteda as a toolbox for me to use that's packed with all the mathematical formulas I'd like to apply to the text data - Why use a rock to drive a nail when I've got a perfectly good hammer laying around?
+
+### The Modeling Process
+
+To recap, I'll be comparing the accuracy of two different models which evaluate readability: 
+
+* The first model relies entirely on the Flesch-Kincaid Grade Level to assign readability scores to a passage
+* The second, more comprehensive model uses a combination of measures to assign readability scores to a passage
