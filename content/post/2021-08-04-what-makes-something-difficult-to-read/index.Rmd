@@ -76,7 +76,7 @@ Examples of features I created:
 
 After enriching the dataset with explanatory variables, I randomly sampled the training data into five smaller sets. This process is called five-fold cross validation, and is designed to prevent my model from picking up on the quirks of one set of data that may not generalize to new information the model hasn't seen before. 
 
-For example, if I built a weather machine that predicts whether it will rain on a given day, but only fed it weather data from this summer in Oregon, it might predict that rain would never come!
+For example, if I built a weather machine that predicts whether it will rain on a given day, but only fed it weather data from this summer in Oregon, it might predict that rain would never come! It's good practice to proactively mitigate the quirks of data through resampling.
 
 I then fit (train) a linear regression model on each of the folds and assess each sub-model's performance in predicting readability. To avoid cherry picking which of the five sub-models performed best, I take the average of my quality metric, RMSE, across the five. 
 
@@ -86,7 +86,7 @@ RMSE stands for "Root Mean Squared Error" and is a measure of how far off my pre
 
 I began this project with the expectation that a comprehensive model would be more powerful at predicting readability than one that just relied on the Flesh-Kincaid Grade Level. I expected this because the addition of explanatory variables to a model increases the amount of information available for the model to make predictions with. It's typically true that one can make better decisions if they have more complete information to work with.
 
-My expectations were met - the comprehensive model performed better than the Flesch-Kincaid model with a reduction in RMSE of 15.84%. 
+My expectations were met: the comprehensive model performed better than the Flesch-Kincaid model with a reduction in RMSE of 15.84%. R-squared, a number that indicates what percentage of variaton in the response variable is explained by the explanatory variables, also rose from explaining around a quarter of variation to explaining half of it.
 
 ```{r echo=FALSE, message=FALSE, fig.align='center'}
 library(tidyverse)
@@ -96,6 +96,16 @@ Metrics <- Metrics %>% rename(Model = `ï..Model`, `R^2` = R.squared)
 kable(Metrics)
 ```
 
+Mapping variable importance gives us a look at which of the explanatory variables were most relevant for predicting readability. Surprisingly, some of the most powerful metrics like the Dickes-Steiwer (1977) number centered on calculations of average word and sentence length. Another component for predicting readability was the proportion of unique, challenging words in an excerpt, based on Spache (1952). 
 
 ![*The most predictive variables in the comprehensive model consisted mostly of established measures of readability*](images/VIFShadow.png)
+
+Unfortunately, my favorite metric based on the average score of an excerpt's words when played in Scrabble didn't make it to the top of the list. To learn more about the formulas used, [here is a link to documentation on how they were calculated.](https://quanteda.io/reference/textstat_readability.html)
+
+### Reading Into Things
+
+In this project I was able to demonstrate that there are ways to model readability more accurately than the Flesch-Kincaid Grade Level system, at no extra cost. Although readability metrics are sometimes criticized for relying on syntactic complexity and measures of word and sentence length, there is promise in using combinations of readability metrics to improve accuracy.
+
+There are some limitations to using my method. Most notably, the parsimony of my comprehensive model is sacrificed for an improvement in RMSE and R-squared. There's something to be said for how easy it is to understand a model, and the high dimensionality of the comprehensive model makes it tough to interpret. With only one variable in the simple Flesch-Kincaid model, it's difficult to misinterpret. 
+
 
