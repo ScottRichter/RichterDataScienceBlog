@@ -28,7 +28,7 @@ With an accurate, open-source method for evaluating the readability of a work, t
 
 My solution? Use machine learning techniques and natural language processing on a database of graded text excerpts from CommonLit to create a new, free method of evaluating text readability. The question boils down to "Which features of a text excerpt best predict its readability score?" 
 
-If you've got a flight to catch, the short answer is that simple measures of text readability can be remarkably powerful when combined. Based on my findings, using a collection of readability measures in tandem resulted in **an improvement of over 20% in accurately determining readability** when compared to the most popular measure (Flesch-Kincaid Grade Level) alone. If you've got some time before your flight, though, read on: the comprehensive answer is a little more interesting.
+If you've got a flight to catch, the short answer is that simple measures of text readability can be remarkably powerful when combined. Based on my findings, using a collection of readability measures in tandem resulted in **an improvement of over 15% in accurately determining readability** when compared to the most popular measure (Flesch-Kincaid Grade Level) alone. If you've got some time before your flight, though, read on: the comprehensive answer is a little more interesting.
 
 ### A Quick Overview: CommonLit Data and Regression Modeling
 
@@ -52,7 +52,9 @@ There are a number of ways. Most reading scores are based on traditional readabi
 
 While this scoring system is helpful, it is not a comprehensive evaluation of reading complexity. Proprietary methods, like those used by market leader Lexile, offer a more thorough analysis of readability. The drawbacks with Lexile are that its methodology is opaque and it costs money to receive Lexile scores for any text excerpt longer than 250 characters. If you've got a tweet or other short passage you want analyzed, [you can use Lexile's free analyzer here.](https://hub.lexile.com/analyzer)
 
-Because the Flesch-Kincaid Grade Level was once the standard for measuring readability, I'm going to use it as the baseline for how well my readability predictions perform. My goal is to use a combination of features (including Flesch-Kincaid) to improve prediction accuracy. To do this, I'll be generating explanatory variables from the text data based on popular measures of readability using the quanteda library in R. Think of quanteda as a toolbox for me to use that's packed with all the mathematical formulas I'd like to apply to the text data - Why use a rock to drive a nail when I've got a perfectly good hammer laying around?
+Because the Flesch-Kincaid Grade Level was once the standard for measuring readability, I'm going to use it as the baseline for how well my readability predictions perform. My goal is to use a combination of features (including Flesch-Kincaid) to improve prediction accuracy. 
+
+To do this, I'll be generating explanatory variables from the text data based on popular measures of readability using the quanteda library in R. Think of quanteda as a toolbox for me to use that's packed with all the mathematical formulas I'd like to apply to the text data - Why use a rock to drive a nail when I've got a perfectly good hammer laying around?
 
 ### The Modeling Process
 
@@ -60,3 +62,40 @@ To recap, I'll be comparing the accuracy of two different models which evaluate 
 
 * The first model relies entirely on the Flesch-Kincaid Grade Level to assign readability scores to a passage
 * The second, more comprehensive model uses a combination of measures to assign readability scores to a passage
+
+The first step in the modeling process is to split the data into a training set and a testing set. From the entire collection of text excerpts and their associated difficulty scores, I put three quarters of the entries into a training set, and the remaining quarter into a testing set. This is done so that we can build a model based on information in the training set to make predictions with on the test set, treating them as data the model has never seen before. We can then score how accurately the model predicted readability because we have the associated difficulty scores for excerpts in our test set.
+
+The next step is to create explanatory variables based on the text excerpts in our training set. Using tools like tidytext (which allows me to perform calculations on text data) and tm (which let be break apart the text excerpts into smaller components) along with quanteda for readability statistics let me create 34 explanatory variables.
+
+Examples of features I created:  
+
+* Frequency of dialogue and the word "said"
+* Number of words, sentences, and filler words (stopwords)
+* Proportion of filler words compared to all words
+* A collection of 26 measures of readability based on academic articles
+
+After enriching the dataset with explanatory variables, I randomly sampled the training data into five smaller sets. This process is called five-fold cross validation, and is designed to prevent my model from picking up on the quirks of one set of data that may not generalize to new information the model hasn't seen before. 
+
+For example, if I built a weather machine that predicts whether it will rain on a given day, but only fed it weather data from this summer in Oregon, it might predict that rain would never come!
+
+I then fit (train) a linear regression model on each of the folds and assess each sub-model's performance in predicting readability. To avoid cherry picking which of the five sub-models performed best, I take the average of my quality metric, RMSE, across the five. 
+
+RMSE stands for "Root Mean Squared Error" and is a measure of how far off my predictions were from the actual difficulty score on average. An RMSE of zero, although practically impossible, would mean that the model predicted readability perfectly every time. In general, a lower score is desirable because it indicates a more accurate model. With RMSE calculated, we can compare the accuracy of the Flesch-Kincaid model and the comprehensive model.
+
+### Results and Variable Importance
+
+I began this project with the expectation that a comprehensive model would be more powerful at predicting readability than one that just relied on the Flesh-Kincaid Grade Level. I expected this because the addition of explanatory variables to a model increases the amount of information available for the model to make predictions with. It's typically true that one can make better decisions if they have more complete information to work with.
+
+My expectations were met - the comprehensive model performed better than the Flesch-Kincaid model with a reduction in RMSE of 15.84%. 
+
+```{r echo=FALSE, message=FALSE, fig.align='center'}
+library(tidyverse)
+library(kableExtra)
+Metrics <- read.csv("C:/Users/srich/iCloudDrive/@ MSDS Round 3/2. Capstone Project/Project/Metrics.csv")
+Metrics <- Metrics %>% rename(Model = `ï..Model`, `R^2` = R.squared)
+kable(Metrics)
+```
+
+
+![*The most predictive variables in the comprehensive model consisted mostly of established measures of readability*](images/VIFShadow.png)
+
