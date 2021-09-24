@@ -123,7 +123,7 @@ fullsummary
 \n
 \n
 
-Notes:  
+## Observations:  
 
 - Half of all clients are between 33 and 48 years old.
 - Most clients work blue-collar or management jobs (around 21% for each).
