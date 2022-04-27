@@ -1,6 +1,7 @@
 # RichterDataScienceBlog
  My personal data science blog
  
- This began with my capstone project to earn an MS in data science, and continues with hobby projects and business problems.
- The project focuses on predicting readability scores for passages of text to benefit CommonLit, a literacy NPO.
+ The blog began with my capstone project for an MS in Data Science, in which I modeled readability scores for CommonLit, a literacy NPO.
+ This is where I'll post about my hobby projects and analyses.
+ 
  Visit me at [my blog](https://richterdatascience.netlify.app/) to see what I'm up to!
