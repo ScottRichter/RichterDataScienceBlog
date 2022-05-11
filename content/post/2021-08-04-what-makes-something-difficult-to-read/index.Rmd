@@ -8,6 +8,8 @@ categories:
   - CommonLit
 tags: []
 math: true
+cover:
+  image: images/CommonLitLogo2.png
 ---
 
 ### What Makes Something Difficult to Read?
@@ -65,7 +67,7 @@ To recap, I'll be comparing the accuracy of two different models which evaluate 
 
 The first step in the modeling process is to split the data into a training set and a testing set. From the entire collection of text excerpts and their associated difficulty scores, I put three quarters of the entries into a training set, and the remaining quarter into a testing set. This is done so that we can build a model based on information in the training set to make predictions with on the test set, treating them as data the model has never seen before. We can then score how accurately the model predicted readability because we have the associated difficulty scores for excerpts in our test set.
 
-The next step is to create explanatory variables based on the text excerpts in our training set. Using tools like tidytext (which allows me to perform calculations on text data) and tm (which let be break apart the text excerpts into smaller components) along with quanteda for readability statistics let me create 34 explanatory variables.
+The next step is to create explanatory variables based on the text excerpts in our training set. Using tools like tidytext (which allows me to perform calculations on text data) and tm (which let me break apart the text excerpts into smaller components) along with quanteda for readability statistics let me create 34 explanatory variables.
 
 Examples of features I created:  
 
@@ -75,6 +77,12 @@ Examples of features I created:
 * A collection of 26 measures of readability based on academic articles
 
 After enriching the dataset with explanatory variables, I randomly sampled the training data into five smaller sets. This process is called five-fold cross validation, and is designed to prevent my model from picking up on the quirks of one set of data that may not generalize to new information the model hasn't seen before. 
+
+<center>
+
+![*A diagram of my modeling process*](images/CommonLitModelDiagram2.png#center)
+
+</center>
 
 For example, if I built a weather machine that predicts whether it will rain on a given day, but only fed it weather data from this summer in Oregon, it might predict that rain would never come! It's good practice to proactively mitigate the quirks of data through resampling.
 

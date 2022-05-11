@@ -1,0 +1,22 @@
+---
+title: TEST Page
+author: Scott Richter
+date: '2022-05-10'
+slug: []
+categories:
+  - TEST
+tags: []
+cover:
+    image: "https://i.natgeofe.com/k/75ac774d-e6c7-44fa-b787-d0e20742f797/giant-panda-eating.jpg"
+    # can also paste direct link from external site
+    # ex. https://i.ibb.co/K0HVPBd/paper-mod-profilemode.png
+    alt: "<alt text>"
+    caption: "<text>"
+    relative: true # To use relative path for cover image, used in hugo Page-bundles
+params:
+    cover:
+        linkFullImages: true
+ShowToc: true
+
+---
+

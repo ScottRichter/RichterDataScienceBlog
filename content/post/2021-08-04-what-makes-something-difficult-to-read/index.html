@@ -8,6 +8,8 @@ categories:
   - CommonLit
 tags: []
 math: true
+cover:
+  image: images/CommonLitLogo2.png
 ---
 
 <script src="{{< blogdown/postref >}}index_files/kePrint/kePrint.js"></script>
@@ -57,7 +59,7 @@ math: true
 <li>The second, more comprehensive model uses a combination of measures to assign readability scores to a passage</li>
 </ul>
 <p>The first step in the modeling process is to split the data into a training set and a testing set. From the entire collection of text excerpts and their associated difficulty scores, I put three quarters of the entries into a training set, and the remaining quarter into a testing set. This is done so that we can build a model based on information in the training set to make predictions with on the test set, treating them as data the model has never seen before. We can then score how accurately the model predicted readability because we have the associated difficulty scores for excerpts in our test set.</p>
-<p>The next step is to create explanatory variables based on the text excerpts in our training set. Using tools like tidytext (which allows me to perform calculations on text data) and tm (which let be break apart the text excerpts into smaller components) along with quanteda for readability statistics let me create 34 explanatory variables.</p>
+<p>The next step is to create explanatory variables based on the text excerpts in our training set. Using tools like tidytext (which allows me to perform calculations on text data) and tm (which let me break apart the text excerpts into smaller components) along with quanteda for readability statistics let me create 34 explanatory variables.</p>
 <p>Examples of features I created:</p>
 <ul>
 <li>Frequency of dialogue and the word “said”</li>
@@ -66,6 +68,12 @@ math: true
 <li>A collection of 26 measures of readability based on academic articles</li>
 </ul>
 <p>After enriching the dataset with explanatory variables, I randomly sampled the training data into five smaller sets. This process is called five-fold cross validation, and is designed to prevent my model from picking up on the quirks of one set of data that may not generalize to new information the model hasn’t seen before.</p>
+<center>
+<div class="figure">
+<img src="images/CommonLitModelDiagram2.png#center" alt="A diagram of my modeling process" />
+<p class="caption"><em>A diagram of my modeling process</em></p>
+</div>
+</center>
 <p>For example, if I built a weather machine that predicts whether it will rain on a given day, but only fed it weather data from this summer in Oregon, it might predict that rain would never come! It’s good practice to proactively mitigate the quirks of data through resampling.</p>
 <p>I then fit (train) a linear regression model on each of the folds and assess each sub-model’s performance in predicting readability. To avoid cherry picking which of the five sub-models performed best, I take the average of my quality metric, RMSE, across the five.</p>
 <p>RMSE stands for “Root Mean Squared Error” and is a measure of how far off my predictions were from the actual difficulty score on average. An RMSE of zero, although practically impossible, would mean that the model predicted readability perfectly every time. In general, a lower score is desirable because it indicates a more accurate model. With RMSE calculated, we can compare the accuracy of the Flesch-Kincaid model and the comprehensive model.</p>
