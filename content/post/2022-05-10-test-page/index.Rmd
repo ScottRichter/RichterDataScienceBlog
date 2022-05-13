@@ -1,5 +1,5 @@
 ---
-title: TEST Page
+title: Under Construction
 author: Scott Richter
 date: '2022-05-10'
 slug: []
@@ -13,10 +13,22 @@ cover:
     alt: "<alt text>"
     caption: "<text>"
     relative: true # To use relative path for cover image, used in hugo Page-bundles
-params:
-    cover:
-        linkFullImages: true
-ShowToc: true
-
+draft: true
 ---
+```{r setup, include=FALSE}
+library(reticulate)
+#conda_create(envname = 'ReticulateTest',
+#             packages = ('pandas', 'numpy'))
+```
 
+```{python, echo=FALSE, results='hide'}
+print('Hello, world!')
+```
+
+## Imports
+```{python}
+def pleaseWork(n):
+  print('Panda Party\n' * n)
+
+pleaseWork(5)
+```

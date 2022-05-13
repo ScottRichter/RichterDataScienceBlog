@@ -153,11 +153,11 @@
     border-radius: var(--radius);
 }
 
-.post-content .highlight:not(table),
-.post-content pre {
+.post-content .highlight:not(table) {
     margin: 10px auto;
     background: var(--hljs-bg) !important;
     border-radius: var(--radius);
+    direction: ltr;
 }
 
 .post-content li > .highlight {
@@ -193,10 +193,6 @@
     display: none;
 }
 
-.post-content .highlight span {
-    background: 0 0 !important;
-}
-
 .post-content code {
     margin: auto 4px;
     padding: 4px 6px;
@@ -210,9 +206,9 @@
     display: block;
     margin: auto 0;
     padding: 10px;
-    color: rgba(255, 255, 255, 0.8);
-    background: 0 0;
-    border-radius: 0;
+    color: rgb(213, 213, 214);
+    background: var(--hljs-bg) !important;
+    border-radius: var(--radius);
     overflow-x: auto;
     word-break: break-all;
 }
@@ -227,8 +223,7 @@
     margin: 30px 0;
     height: 2px;
     background: var(--tertiary);
-    border-top: 0;
-    border-bottom: 0;
+    border: 0;
 }
 
 .post-content iframe {
@@ -237,10 +232,11 @@
 
 .post-content img {
     border-radius: 4px;
+    margin: 1rem 0;
 }
 
 .post-content img[src*="#center"] {
-    margin: auto;
+    margin: 1rem auto;
 }
 
 .post-content figure.align-center {
@@ -369,24 +365,25 @@ h6:hover .anchor {
     color: var(--secondary);
     margin-inline-start: 8px;
     font-weight: 500;
+    user-select: none;
 }
 
 .post-content :not(table) ::-webkit-scrollbar-thumb {
     border: 2px solid var(--hljs-bg);
-    background: rgba(255, 255, 255, 0.32);
+    background: rgb(113, 113, 117);
 }
 
 .post-content :not(table) ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.56);
+    background: rgb(163, 163, 165);
 }
 
 .gist table::-webkit-scrollbar-thumb {
     border: 2px solid rgb(255, 255, 255);
-    background: rgba(0, 0, 0, 0.32);
+    background: rgb(173, 173, 173);
 }
 
 .gist table::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.56);
+    background: rgb(112, 112, 112);
 }
 
 .post-content table::-webkit-scrollbar-thumb {
@@ -429,4 +426,8 @@ h6:hover .anchor {
 
 [dir="rtl"] .paginav .next {
     text-align: left;
+}
+
+h1>a>svg {
+    display: inline;
 }
